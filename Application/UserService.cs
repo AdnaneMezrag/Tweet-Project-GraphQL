@@ -43,5 +43,10 @@ namespace Getting_Started.Application
             }
         }
 
+        public IQueryable<User> GetAll()
+        {
+            return _userRepository.GetAll();
+        }
+
     }
 }

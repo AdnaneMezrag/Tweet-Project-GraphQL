@@ -21,6 +21,12 @@ namespace Getting_Started.Application
             return await _postRepository.GetAllAsync();
         }
 
+        public IQueryable<Post> GetAllPosts()
+        {
+            return _postRepository.GetAll();
+        }
+
+
         public async Task<int> CreatePostAsync(Post post)
         {
             await _postRepository.AddAsync(post);

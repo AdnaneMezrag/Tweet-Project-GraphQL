@@ -1,4 +1,6 @@
 ﻿using Getting_Started.Domain.Entities;
+using Getting_Started.Infrastructure;
+using System;
 
 namespace Getting_Started.GraphQL.Types
 {
@@ -13,13 +15,26 @@ namespace Getting_Started.GraphQL.Types
 
 
             descriptor.Field(p => p.Comments)
-                .UseProjection()
+                .ResolveWith<PostResolvers>(r => r.GetComments(default!, default!))  // custom resolver
                 .UseFiltering()
-                .UseSorting();
+                .UseSorting()
+                ;
 
             descriptor.Field(p => p.User)
                 .UseProjection();
         }
+    
     }
+
+    public class PostResolvers
+    {
+        public IQueryable<Comment> GetComments([Parent] Post post, [Service] TweetContext context)
+        {
+            return context.Comments
+                .Where(c => c.PostId == post.Id)
+                .AsQueryable();
+        }
+    }
+
 
 }

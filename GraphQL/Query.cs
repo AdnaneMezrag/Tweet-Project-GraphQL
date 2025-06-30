@@ -4,14 +4,16 @@ using Getting_Started.Infrastructure;
 
 public class Query
 {
-    public async Task<IEnumerable<Post>> GetPosts([Service] PostService postService)
+    [UseProjection]
+    public IQueryable<Post> GetPosts([Service] PostService postService)
     {
-        return await postService.GetAllPostsAsync();
-    }   
+        return postService.GetAllPosts();
+    }
 
-    public async Task <IEnumerable<User>> GetUsers([Service] UserService userService)
+    [UseProjection]
+    public IQueryable<User> GetUsers([Service] UserService userService)
     {
-        return await userService.GetAllUsersAsync();
+        return userService.GetAll();
     }
     
     public async Task <IEnumerable<Comment>> GetCommentsByPostID(int id, [Service] CommentService commentService)

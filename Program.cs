@@ -19,7 +19,8 @@ namespace Getting_Started
 
             // Add services to the container.
             builder.Services.AddDbContext<TweetContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                );
 
             builder.Services.AddScoped<UserService>(); // Add this line
             builder.Services.AddScoped<PostService>(); // Add this line

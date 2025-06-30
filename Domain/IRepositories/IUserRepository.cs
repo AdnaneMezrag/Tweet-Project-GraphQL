@@ -6,5 +6,6 @@ namespace Getting_Started.Domain.IRepositories
     {
         Task<IEnumerable<Post>> GetUserPostsAsync(int userId);
         Task<IEnumerable<Comment>> GetUserCommentsAsync(int userId);
+        IQueryable<User> GetAll();
     }
 }

@@ -11,32 +11,30 @@ namespace Getting_Started.GraphQL.Types
             descriptor.Field(u => u.Id).Type<NonNullType<IdType>>();
             descriptor.Field(u => u.Name).Type<NonNullType<StringType>>();
 
-            // Resolve Posts using DataLoader
+            // Prefer either DataLoader or EF IQueryable — not both
             descriptor.Field("posts")
-                .Type<ListType<ObjectType<Post>>>()
+                .Type<ListType<NonNullType<PostType>>>()
                 .Resolve(async ctx =>
                 {
                     var user = ctx.Parent<User>();
                     return await ctx.DataLoader<UserPostsDataLoader>()
-                        .LoadAsync(user.Id, ctx.RequestAborted);
+                                    .LoadAsync(user.Id, ctx.RequestAborted);
                 });
 
-            descriptor.Field(u => u.Comments).UseProjection();
-
-            //descriptor.Field(u => u.Comments)
-            //    .UseProjection()
-            //    .UseFiltering()
-            //    .UseSorting()
-            //    .ResolveWith<Resolvers>(r => r.GetComments(default!, default!));
+            descriptor.Field("comments")
+                .Type<ListType<NonNullType<CommentType>>>()
+                .ResolveWith<Resolvers>(r => r.GetComments(default!, default!))
+                .UseFiltering()
+                .UseSorting();
         }
 
-        //private class Resolvers
-        //{
-        //    public IQueryable<Comment> GetComments([Parent] User user, [Service] TweetContext dbContext)
-        //    {
-        //        return dbContext.Comments.Where(c => c.UserId == user.Id);
-        //    }
-        //}
+        private class Resolvers
+        {
+            public IQueryable<Comment> GetComments([Parent] User user, [Service] TweetContext dbContext)
+            {
+                return dbContext.Comments.Where(c => c.UserId == user.Id);
+            }
+        }
 
     }
 

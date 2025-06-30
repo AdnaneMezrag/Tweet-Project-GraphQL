@@ -67,5 +67,14 @@ namespace Getting_Started.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public IQueryable<Post> GetAll()
+        {
+            return _context.Posts
+                .Include(p => p.User)  // Include post author
+                .Include(p => p.Comments)  // Include comments
+                    .ThenInclude(c => c.User)  // Include comment authors
+                .AsNoTracking();
+        }
+
     }
 }

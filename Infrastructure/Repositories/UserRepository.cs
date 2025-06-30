@@ -30,6 +30,11 @@ namespace Getting_Started.Infrastructure.Repositories
             //return await _context.Users.ToListAsync();
         }
 
+        public IQueryable<User> GetAll()
+        {
+            return _context.Users;
+        }
+
         public async Task AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
